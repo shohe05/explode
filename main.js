@@ -1,12 +1,18 @@
 enchant();
 
 window.onload = function() {
-  var core = new Core(300, 300);
-  core.preload(['chara7.png', 'chara2.png', 'icon0.png', 'monster4.gif', 'effect0.png']);
+  var core = new Core(320, 320);
+  core.preload(['chara7.png', 'chara2.png', 'icon0.png', 'monster4.gif', 'effect0.png', 'clear.png', 'map2.png']);
   core.fps = 10;
   core.onload = function() {
   gameOverScene = new Scene();
   gameOverScene.backgroundColor = 'black';
+  var clear = new Sprite(267, 48);
+  clear.image = core.assets['clear.png'];
+  clear.x = 10;
+  clear.y = 130;
+  gameClearScene = new Scene();
+  gameClearScene.addChild(clear);
 
     // 自機
     var Player = Class.create(Sprite, {
@@ -59,7 +65,7 @@ window.onload = function() {
       onenterframe: function() {
         if (this.frame = 3) this.frame = 0;
         this.frame ++;
-        this.x -= 6;
+        this.x -= 4;
       },
 
       damage: function() {
@@ -105,17 +111,35 @@ window.onload = function() {
 
     });
 
+    // ゴール
+    var Goal = Class.create(Sprite, {
+      initialize: function(x, y) {
+        Sprite.call(this, 16, 16);
+        this.x = x;
+        this.y = y;
+        this.frame = 31;
+        this.image = core.assets['icon0.png'];
+
+        core.rootScene.addChild(this);
+      },
+
+      onenterframe: function() {
+        if (this.intersect(player)) this.gameClear();
+      },
+
+      gameClear: function() {
+        core.pushScene(gameClearScene);
+        core.stop;
+      }
+
+    });
+
     var player = new Player(100, 10);
+    var goal = new Goal(280, 10);
     var enemies = [];
     for (i = 0; i < 20; i++) {
       enemies[i] = new Enemy(200+(30*i), 10);
     }
-    var goal = new Sprite(16, 16);
-    goal.image = core.assets['icon0.png'];
-    goal.frame = 32;
-    goal.x = 280;
-    goal.y = 10;
-    core.rootScene.addChild(goal);
   }
   core.start();
 };
