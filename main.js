@@ -2,12 +2,14 @@ enchant();
 
 window.onload = function() {
   var core = new Core(320, 320);
-  core.preload(['chara7.png', 'chara2.png', 'icon0.png', 'monster4.gif', 'effect0.png', 'clear.png', 'map2.png', 'bigmonster1.gif', 'bgm.wav', 'bomb.mp3', 'bigbomb.mp3', 'gameover.png']);
+  core.preload(['chara7.png', 'chara2.png', 'icon0.png', 'monster4.gif', 'effect0.png', 'clear.png', 'map2.png', 'bigmonster1.gif', 'bgm.wav', 'bomb.mp3', 'bigbomb.mp3', 'gameover.png', 'monster3.gif', 'gameclear.wav', 'gameover.wav']);
   core.fps = 10;
   core.onload = function() {
   var bgm = core.assets['bgm.wav'].clone();
   var soundBomb = core.assets['bomb.mp3'];
   var soundBigBomb = core.assets['bigbomb.mp3'];
+  var soundGameOver = core.assets['gameover.wav']
+  var soundGameClear = core.assets['gameclear.wav']
   bgm.play();
   gameOverScene = new Scene();
   gameOverScene.backgroundColor = 'black';
@@ -97,9 +99,9 @@ window.onload = function() {
         if (power == 'up') {
           this.tl.cue({
             0: function() { bomb = new Bomb(this.x+3, this.y-30); },
-            2: function() { bomb.tl.moveTo(this.x, this.y - 60, 3); },
-            3: function() { bomb.tl.moveTo(this.x, this.y - 90, 2); },
-            4: function() { bomb.tl.moveTo(this.x, this.y-50, 2); },
+            2: function() { bomb.tl.moveTo(this.x, this.y - 100, 3); },
+            3: function() { bomb.tl.moveTo(this.x, this.y - 150, 2); },
+            4: function() { bomb.tl.moveTo(this.x, this.y-50, 3); },
             4: function() { bomb.tl.moveTo(this.x, this.y+20, 1); }
           })
         } else {
@@ -122,6 +124,8 @@ window.onload = function() {
       },
 
       die: function() {
+        bgm.stop();
+        soundGameOver.play();
         core.pushScene(gameOverScene);
         core.stop;
       }
@@ -158,7 +162,40 @@ window.onload = function() {
       }
     });
 
-    // 敵機
+    var FlyEnemy = Class.create(Sprite, {
+      initialize: function(x, y) {
+        Sprite.call(this, 48, 48);
+        this.x = x;
+        this.y = y;
+        this.frame = 2;
+        this.image = core.assets['monster3.gif'];
+        this.life = 1;
+        this.presence = true;
+
+        core.rootScene.addChild(this);
+        this.tl.moveBy(30, 30, 20)
+          .moveBy(-30, 30, 20)
+          .loop();
+      },
+
+      onenterframe: function() {
+        // if (this.frame = 3) this.frame = 0;
+        // this.frame ++;
+        // this.x -= 4;
+      },
+
+      damage: function(power) {
+        this.life -= power;
+        if (this.presence == true && this.life <= 0) this.die();
+      },
+
+      die: function() {
+        this.tl.removeFromScene();
+        this.presence = false;
+      }
+    });
+
+    // 敵大
     var Boss = Class.create(Sprite, {
       initialize: function(x, y) {
         Sprite.call(this, 80, 80);
@@ -232,7 +269,7 @@ window.onload = function() {
 
     });
 
-    // 爆弾
+    // 大爆弾
     var BigBomb = Class.create(Sprite, {
       initialize: function(x, y) {
         Sprite.call(this, 16, 16);
@@ -277,7 +314,6 @@ window.onload = function() {
 
     });
 
-    // ゴール
     var Goal = Class.create(Sprite, {
       initialize: function(x, y) {
         Sprite.call(this, 16, 16);
@@ -294,6 +330,8 @@ window.onload = function() {
       },
 
       gameClear: function() {
+        bgm.stop();
+        soundGameClear.play();
         core.pushScene(gameClearScene);
         core.stop;
       }
@@ -306,7 +344,14 @@ window.onload = function() {
     for (i = 0; i < 50; i++) {
       enemies[i] = new Enemy(200+(30*i), 224);
     }
+    for (i = 0; i < 5; i++) {
+      enemies.push(new FlyEnemy(rand(300), 0));
+    }
     enemies.push(new Boss(400, 150));
   }
   core.start();
 };
+
+function rand(n) {
+  return Math.floor(Math.random() * (n+1));
+}
