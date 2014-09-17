@@ -23,7 +23,9 @@ window.onload = function() {
       onenterframe: function() {
         if (core.input.right) this.x += 5;
         if (core.input.left) this.x -= 5;
-        if (this.intersect(enemy)) this.die();
+        for (i = 0; i < enemies.length; i++) {
+          if (this.intersect(enemies[i])) this.die();
+        }
       },
 
       die: function() {
@@ -48,7 +50,7 @@ window.onload = function() {
       onenterframe: function() {
         if (this.frame = 3) this.frame = 0;
         this.frame ++;
-        this.x -= 5;
+        this.x -= 3;
         if (this.intersect(bomb)) this.damage();
         if (this.life == 0) this.die();
       },
@@ -58,7 +60,7 @@ window.onload = function() {
       },
 
       die: function() {
-
+        this.opacity = 0.0;
       }
     });
 
@@ -81,8 +83,11 @@ window.onload = function() {
     });
 
     var player = new Player(100, 10);
-    var enemy = new Enemy(400, 10);
     var bomb = new Bomb(200, 10);
+    var enemies = [];
+    for (i = 0; i < 10; i++) {
+      enemies[i] = new Enemy(400+(30*i), 10);
+    }
   }
   core.start();
 };
