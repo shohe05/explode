@@ -2,7 +2,7 @@ enchant();
 
 window.onload = function() {
   var core = new Core(320, 320);
-  core.preload(['chara7.png', 'chara2.png', 'icon0.png', 'monster4.gif', 'effect0.png', 'clear.png', 'map2.png', 'bigmonster1.gif', 'bgm.wav', 'bomb.mp3', 'bigbomb.mp3']);
+  core.preload(['chara7.png', 'chara2.png', 'icon0.png', 'monster4.gif', 'effect0.png', 'clear.png', 'map2.png', 'bigmonster1.gif', 'bgm.wav', 'bomb.mp3', 'bigbomb.mp3', 'gameover.png']);
   core.fps = 10;
   core.onload = function() {
   var bgm = core.assets['bgm.wav'].clone();
@@ -11,6 +11,11 @@ window.onload = function() {
   bgm.play();
   gameOverScene = new Scene();
   gameOverScene.backgroundColor = 'black';
+  var gameover = new Sprite(189, 97);
+  gameover.image = core.assets['gameover.png'];
+  gameover.x = 60;
+  gameover.y = 100;
+  gameOverScene.addChild(gameover);
   var clear = new Sprite(267, 48);
   clear.image = core.assets['clear.png'];
   clear.x = 10;
@@ -50,15 +55,20 @@ window.onload = function() {
         Sprite.call(this, 32, 32);
         this.x = x;
         this.y = y;
-        this.frame = 18;
+        this.frame = 60;
         this.image = core.assets['chara7.png'];
 
         core.rootScene.addChild(this);
       },
 
       onenterframe: function() {
-        if (core.input.right) this.x += 5;
-        if (core.input.left) this.x -= 5;
+        if (core.input.right) {
+          this.x += 5;
+        }
+        if (core.input.left) {
+          this.frame += 5
+          this.x -= 5;
+        }
         for (i = 0; i < enemies.length; i++) {
           if (enemies[i].presence == true && this.intersect(enemies[i])) this.die();
         }
@@ -86,10 +96,10 @@ window.onload = function() {
       throwBomb: function(power) {
         if (power == 'up') {
           this.tl.cue({
-            0: function() { bomb = new Bomb(this.x+3, this.y-20); },
-            2: function() { bomb.tl.moveTo(this.x, this.y - 40, 3); },
-            3: function() { bomb.tl.moveTo(this.x, this.y - 70, 2); },
-            4: function() { bomb.tl.moveTo(this.x, this.y-30, 2); },
+            0: function() { bomb = new Bomb(this.x+3, this.y-30); },
+            2: function() { bomb.tl.moveTo(this.x, this.y - 60, 3); },
+            3: function() { bomb.tl.moveTo(this.x, this.y - 90, 2); },
+            4: function() { bomb.tl.moveTo(this.x, this.y-50, 2); },
             4: function() { bomb.tl.moveTo(this.x, this.y+20, 1); }
           })
         } else {
@@ -209,9 +219,6 @@ window.onload = function() {
             this.explode();
             enemies[i].damage(1);
           }
-          if (this.presence == true && this.intersect(player)) {
-            player.die();
-          }
         }
       },
 
@@ -258,7 +265,7 @@ window.onload = function() {
                 if (this.presence == true && enemies[i].presence == true && this.within(enemies[i], 90)) {
                   enemies[i].damage(3);
                 }
-                if (this.presence == true && this.within(player, 90)) {
+                if (this.presence == true && this.within(player, 120)) {
                   player.die();
                 }
               }
