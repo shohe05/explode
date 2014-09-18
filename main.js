@@ -2,7 +2,7 @@ enchant();
 
 window.onload = function() {
   var core = new Core(320, 320);
-  core.preload(['chara7.png', 'chara2.png', 'icon0.png', 'monster4.gif', 'effect0.png', 'clear.png', 'map2.png', 'bigmonster1.gif', 'bgm.wav', 'bomb.mp3', 'bigbomb.mp3', 'gameover.png', 'monster3.gif', 'gameclear.wav', 'gameover.wav']);
+  core.preload(['chara7.png', 'chara2.png', 'icon0.png', 'monster4.gif', 'effect0.png', 'clear.png', 'map2.png', 'bigmonster1.gif', 'bgm.wav', 'bomb.mp3', 'bigbomb.mp3', 'gameover.png', 'monster3.gif', 'gameclear.wav', 'gameover.wav', 'logo.gif']);
   core.fps = 10;
   core.onload = function() {
   var bgm = core.assets['bgm.wav'].clone();
@@ -10,7 +10,37 @@ window.onload = function() {
   var soundBigBomb = core.assets['bigbomb.mp3'];
   var soundGameOver = core.assets['gameover.wav']
   var soundGameClear = core.assets['gameclear.wav']
+  var labelAgain = new Label('もう一度プレイ！');
+  labelAgain.x = 110;
+  labelAgain.y = 200;
+  labelAgain.color = 'green';
+  labelAgain.addEventListener('touchend', function() {
+    location.reload();
+  })
+  var labelStart = new Label('PRESS RETURN TO START!!');
+  labelStart.x = 70;
+  labelStart.y = 150;
+  labelStart.color = 'green';
+  var gameStartScene = new Scene();
+  gameStartScene.addChild(labelStart);
+  logo = new Sprite(273, 106);
+  logo.x = 30;
+  logo.y = 20;
+  logo.image = core.assets['logo.gif'];
+  gameStartScene.addChild(logo);
+  gameStartScene.image = core.assets['logo.gif'];
   bgm.play();
+  core.pushScene(gameStartScene);
+  document.onkeydown = function(e) {
+    if (e.keyCode == 13) core.pushScene(core.rootScene);
+  }
+  var labelRetry = new Label('リトライ！');
+  labelRetry.x = 130;
+  labelRetry.y = 220;
+  labelRetry.color = 'blue';
+  labelRetry.addEventListener('touchend', function() {
+    location.reload();
+  })
   gameOverScene = new Scene();
   gameOverScene.backgroundColor = 'black';
   var gameover = new Sprite(189, 97);
@@ -18,11 +48,13 @@ window.onload = function() {
   gameover.x = 60;
   gameover.y = 100;
   gameOverScene.addChild(gameover);
+  gameOverScene.addChild(labelRetry);
   var clear = new Sprite(267, 48);
   clear.image = core.assets['clear.png'];
-  clear.x = 10;
+  clear.x = 30;
   clear.y = 130;
   gameClearScene = new Scene();
+  gameClearScene.addChild(labelAgain);
   gameClearScene.addChild(clear);
 
   var map = new Map(16, 16);
@@ -321,6 +353,7 @@ window.onload = function() {
         this.y = y;
         this.frame = 31;
         this.image = core.assets['icon0.png'];
+        this.scale(3, 4);
 
         core.rootScene.addChild(this);
       },
@@ -339,7 +372,7 @@ window.onload = function() {
     });
 
     var player = new Player(100, 229);
-    var goal = new Goal(280, 236);
+    var goal = new Goal(280, 220);
     var enemies = [];
     for (i = 0; i < 50; i++) {
       enemies[i] = new Enemy(200+(30*i), 224);
