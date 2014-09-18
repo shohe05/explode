@@ -237,6 +237,7 @@ window.onload = function() {
         this.image = core.assets['bigmonster1.gif'];
         this.life = 20;
         this.presence = true;
+        this.scale(1.3, 1.3);
 
         core.rootScene.addChild(this);
         this.tl.moveBy(20, 20, 5)
