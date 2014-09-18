@@ -180,7 +180,7 @@ window.onload = function() {
       onenterframe: function() {
         if (this.frame = 3) this.frame = 0;
         this.frame ++;
-        this.x -= 4;
+        this.x -= 6;
       },
 
       damage: function(power) {
@@ -206,7 +206,7 @@ window.onload = function() {
 
         core.rootScene.addChild(this);
         this.tl.moveBy(30, 30, 20)
-          .moveBy(-30, 30, 20)
+          .moveBy(-30, 30, 10)
           .loop();
       },
 
@@ -247,7 +247,7 @@ window.onload = function() {
       onenterframe: function() {
         if (this.frame = 10) this.frame = 2;
         this.frame ++;
-        this.x -= 4;
+        this.x -= 6;
       },
 
       damage: function(power) {
@@ -375,12 +375,21 @@ window.onload = function() {
     var goal = new Goal(280, 220);
     var enemies = [];
     for (i = 0; i < 50; i++) {
-      enemies[i] = new Enemy(200+(30*i), 224);
+      enemies.push(new Enemy(200+(30*i), 224));
     }
     for (i = 0; i < 5; i++) {
       enemies.push(new FlyEnemy(rand(300), 0));
     }
     enemies.push(new Boss(400, 150));
+    setInterval(function(){
+    for (i = 0; i < 50; i++) {
+      enemies.push(new Enemy(400+(30*i), 224));
+    }
+    for (i = 0; i < 5; i++) {
+      enemies.push(new FlyEnemy(rand(300), 0));
+    }
+    enemies.push(new Boss(400, 150));
+    }, 10000);
   }
   core.start();
 };
