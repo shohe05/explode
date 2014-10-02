@@ -31,9 +31,6 @@ window.onload = function() {
   gameStartScene.image = core.assets['logo.gif'];
   bgm.play();
   core.pushScene(gameStartScene);
-  document.onkeydown = function(e) {
-    if (e.keyCode == 13) core.pushScene(core.rootScene);
-  }
   var labelRetry = new Label('リトライ！');
   labelRetry.x = 130;
   labelRetry.y = 220;
@@ -57,6 +54,9 @@ window.onload = function() {
   gameClearScene.addChild(labelAgain);
   gameClearScene.addChild(clear);
 
+  document.onkeydown = function(e) {
+    if (e.keyCode == 13 && core.currentScene == gameStartScene) core.pushScene(core.rootScene);
+  }
   var map = new Map(16, 16);
   map.image = core.assets['map2.png'];
   var mapData = [
