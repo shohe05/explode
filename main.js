@@ -29,7 +29,7 @@ window.onload = function() {
   logo.image = core.assets['logo.gif'];
   gameStartScene.addChild(logo);
   gameStartScene.image = core.assets['logo.gif'];
-  // bgm.play();
+  bgm.play();
   core.pushScene(gameStartScene);
   // var labelRetry = new Label('リトライ！');
   // labelRetry.x = 130;
@@ -184,7 +184,7 @@ window.onload = function() {
       onenterframe: function() {
         if (this.frame = 3) this.frame = 0;
         this.frame ++;
-        this.x -= 2;
+        this.x -= 3;
       },
 
       damage: function(power) {
