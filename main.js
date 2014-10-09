@@ -10,13 +10,13 @@ window.onload = function() {
   var soundBigBomb = core.assets['bigbomb.mp3'];
   var soundGameOver = core.assets['gameover.wav']
   var soundGameClear = core.assets['gameclear.wav']
-  var labelAgain = new Label('もう一度プレイ！');
-  labelAgain.x = 110;
-  labelAgain.y = 200;
-  labelAgain.color = 'green';
-  labelAgain.addEventListener('touchend', function() {
-    location.reload();
-  })
+  // var labelAgain = new Label('もう一度プレイ！');
+  // labelAgain.x = 110;
+  // labelAgain.y = 200;
+  // labelAgain.color = 'green';
+  // labelAgain.addEventListener('touchend', function() {
+    // location.reload();
+  // })
   var labelStart = new Label('PRESS RETURN TO START!!');
   labelStart.x = 70;
   labelStart.y = 150;
@@ -29,15 +29,15 @@ window.onload = function() {
   logo.image = core.assets['logo.gif'];
   gameStartScene.addChild(logo);
   gameStartScene.image = core.assets['logo.gif'];
-  bgm.play();
+  // bgm.play();
   core.pushScene(gameStartScene);
-  var labelRetry = new Label('リトライ！');
-  labelRetry.x = 130;
-  labelRetry.y = 220;
-  labelRetry.color = 'blue';
-  labelRetry.addEventListener('touchend', function() {
-    location.reload();
-  })
+  // var labelRetry = new Label('リトライ！');
+  // labelRetry.x = 130;
+  // labelRetry.y = 220;
+  // labelRetry.color = 'blue';
+  // labelRetry.addEventListener('touchend', function() {
+    // location.reload();
+  // })
   gameOverScene = new Scene();
   gameOverScene.backgroundColor = 'black';
   var gameover = new Sprite(189, 97);
@@ -45,17 +45,17 @@ window.onload = function() {
   gameover.x = 60;
   gameover.y = 100;
   gameOverScene.addChild(gameover);
-  gameOverScene.addChild(labelRetry);
+  // gameOverScene.addChild(labelRetry);
   var clear = new Sprite(267, 48);
   clear.image = core.assets['clear.png'];
   clear.x = 30;
   clear.y = 130;
   gameClearScene = new Scene();
-  gameClearScene.addChild(labelAgain);
+  // gameClearScene.addChild(labelAgain);
   gameClearScene.addChild(clear);
 
   document.onkeydown = function(e) {
-    if (e.keyCode == 13 && core.currentScene == gameStartScene) core.pushScene(core.rootScene);
+    if (e.keyCode == 13 ) core.pushScene(core.rootScene);
   }
   var map = new Map(16, 16);
   map.image = core.assets['map2.png'];
@@ -109,20 +109,23 @@ window.onload = function() {
         var self = this;
         document.onkeydown = function(e) {
           if (e.keyCode == 65) {
-            self.throwBomb(1);
-          }
-          if (e.keyCode == 81) {
-            self.throwBomb('up');
-          }
-          if (e.keyCode == 88) {
+            // self.throwBomb(1);
             self.throwBomb(3);
           }
+          // if (e.keyCode == 81) {
+            // self.throwBomb('up');
+          // }
+          // if (e.keyCode == 88) {
+            // self.throwBomb(3);
+            // self.throwBomb(1);
+          // }
           if (e.keyCode == 83) {
-            self.throwBigBomb(1);
-          }
-          if (e.keyCode == 67) {
+            // self.throwBigBomb(1);
             self.throwBigBomb(3);
           }
+          // if (e.keyCode == 67) {
+            // self.throwBigBomb(3);
+          // }
         };
 
       },
@@ -160,6 +163,7 @@ window.onload = function() {
         soundGameOver.play();
         core.pushScene(gameOverScene);
         core.stop;
+        setTimeout(function(){location.reload();}, 1000);
       }
     });
 
@@ -180,7 +184,7 @@ window.onload = function() {
       onenterframe: function() {
         if (this.frame = 3) this.frame = 0;
         this.frame ++;
-        this.x -= 6;
+        this.x -= 2;
       },
 
       damage: function(power) {
@@ -319,7 +323,7 @@ window.onload = function() {
       onenterframe: function() {
         var self = this;
         if (this.y >= 226) {
-          setTimeout(function(){self.explode();}, 3000);
+          setTimeout(function(){self.explode();}, 1500);
         }
       },
 
@@ -367,27 +371,26 @@ window.onload = function() {
         bgm.stop();
         soundGameClear.play();
         core.pushScene(gameClearScene);
+        setTimeout(function(){location.reload();}, 4000);
         core.stop;
       }
 
     });
 
-    var player = new Player(100, 229);
+    // var player = new Player(100, 229);
+    var player = new Player(10, 229);
     var goal = new Goal(280, 220);
     var enemies = [];
     for (i = 0; i < 50; i++) {
       enemies.push(new Enemy(200+(30*i), 224));
     }
-    for (i = 0; i < 5; i++) {
-      enemies.push(new FlyEnemy(rand(300), 0));
+    for (i = 0; i < 3; i++) {
+      enemies.push(new FlyEnemy(rand(300), rand(100)));
     }
     enemies.push(new Boss(400, 150));
     setInterval(function(){
     for (i = 0; i < 50; i++) {
       enemies.push(new Enemy(400+(30*i), 224));
-    }
-    for (i = 0; i < 5; i++) {
-      enemies.push(new FlyEnemy(rand(300), 0));
     }
     enemies.push(new Boss(400, 150));
     }, 10000);
