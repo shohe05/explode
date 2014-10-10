@@ -284,7 +284,7 @@ window.onload = function() {
         this.y = y;
         this.frame = 2;
         this.image = core.assets['bigmonster2.gif'];
-        this.life = 80;
+        this.life = 30;
         this.presence = true;
         this.scale(2.3, 2.3);
 
@@ -459,16 +459,16 @@ window.onload = function() {
     var bosses = new Array();
     var bosses2 = new Array();
     bosses.push(new Boss(400, 150));
-    bosses2.push(new Boss2(500, 150));
+    bosses2.push(new Boss2(450, 150));
     setInterval(function(){
     for (i = 0; i < 50; i++) {
       enemies.push(new Enemy(400+(30*i), 224));
     }
     // enemies.push(new Boss(400, 150));
     bosses.push(new Boss(400, 150));
-    bosses2.push(new Boss2(400, 150));
+    bosses2.push(new Boss2(450, 150));
     // enemies.push(new Boss(400, 150));
-    }, 11000);
+    }, 7000);
   }
   core.start();
 };
