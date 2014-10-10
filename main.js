@@ -106,6 +106,9 @@ window.onload = function() {
         for (i = 0; i < enemies.length; i++) {
           if (enemies[i].presence == true && this.intersect(enemies[i])) this.die();
         }
+        for (i = 0; i < bosses.length; i++) {
+          if (bosses[i].presence == true && this.within(bosses[i], 45)) this.die();
+        }
         var self = this;
         document.onkeydown = function(e) {
           if (e.keyCode == 65) {
@@ -294,6 +297,12 @@ window.onload = function() {
             enemies[i].damage(1);
           }
         }
+        for (i = 0; i < bosses.length; i++) {
+          if (this.presence == true && bosses[i].presence == true && this.intersect(bosses[i])) {
+            this.explode();
+            bosses[i].damage(1);
+          }
+        }
       },
 
       explode: function() {
@@ -387,12 +396,16 @@ window.onload = function() {
     for (i = 0; i < 3; i++) {
       enemies.push(new FlyEnemy(rand(300), rand(100)));
     }
-    enemies.push(new Boss(400, 150));
+    // enemies.push(new Boss(400, 150));
+    var bosses = new Array();
+    bosses.push(new Boss(400, 150));
     setInterval(function(){
     for (i = 0; i < 50; i++) {
       enemies.push(new Enemy(400+(30*i), 224));
     }
-    enemies.push(new Boss(400, 150));
+    // enemies.push(new Boss(400, 150));
+    bosses.push(new Boss(400, 150));
+    // enemies.push(new Boss(400, 150));
     }, 10000);
   }
   core.start();
