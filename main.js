@@ -2,7 +2,7 @@ enchant();
 
 window.onload = function() {
   var core = new Core(320, 320);
-  core.preload(['chara7.png', 'chara2.png', 'icon0.png', 'monster4.gif', 'effect0.png', 'clear.png', 'map2.png', 'bigmonster1.gif', 'bgm.wav', 'bomb.mp3', 'bigbomb.mp3', 'gameover.png', 'monster3.gif', 'gameclear.wav', 'gameover.wav', 'logo.gif']);
+  core.preload(['chara7.png', 'chara2.png', 'icon0.png', 'monster4.gif', 'effect0.png', 'clear.png', 'map2.png', 'bigmonster1.gif', 'bigmonster2.gif', 'bgm.wav', 'bomb.mp3', 'bigbomb.mp3', 'gameover.png', 'monster3.gif', 'gameclear.wav', 'gameover.wav', 'logo.gif']);
   core.fps = 10;
   core.onload = function() {
   var bgm = core.assets['bgm.wav'].clone();
@@ -107,7 +107,10 @@ window.onload = function() {
           if (enemies[i].presence == true && this.intersect(enemies[i])) this.die();
         }
         for (i = 0; i < bosses.length; i++) {
-          if (bosses[i].presence == true && this.within(bosses[i], 45)) this.die();
+          if (bosses[i].presence == true && this.within(bosses[i], 50)) this.die();
+        }
+        for (i = 0; i < bosses2.length; i++) {
+          if (bosses2[i].presence == true && this.within(bosses2[i], 100)) this.die();
         }
         var self = this;
         document.onkeydown = function(e) {
@@ -242,7 +245,7 @@ window.onload = function() {
         this.y = y;
         this.frame = 2;
         this.image = core.assets['bigmonster1.gif'];
-        this.life = 20;
+        this.life = 10;
         this.presence = true;
         this.scale(1.3, 1.3);
 
@@ -256,6 +259,46 @@ window.onload = function() {
         if (this.frame = 10) this.frame = 2;
         this.frame ++;
         this.x -= 6;
+      },
+
+      damage: function(power) {
+        this.life -= power;
+        var frame = this.frame;
+        this.frame = 7;
+        setTimeout(function(){ this.frame = frame; }, 1000);
+        if (this.presence == true && this.life <= 0) this.die();
+      },
+
+      die: function() {
+        this.frame = 1
+        setTimeout(function(){ this.frame = 0; }, 1000);
+        this.tl.removeFromScene();
+        this.presence = false;
+      }
+    });
+
+    var Boss2 = Class.create(Sprite, {
+      initialize: function(x, y) {
+        Sprite.call(this, 80, 80);
+        this.x = x;
+        this.y = y;
+        this.frame = 2;
+        this.image = core.assets['bigmonster2.gif'];
+        this.life = 80;
+        this.presence = true;
+        this.scale(2.3, 2.3);
+
+        core.rootScene.addChild(this);
+        // this.tl.moveBy(20, 20, 5)
+          // .moveBy(-20, -20, 5)
+          // .loop();
+      },
+
+      onenterframe: function() {
+        this.frame = this.age % 7 + 2;
+        // if (this.frame = 10) this.frame = 2;
+        // this.frame ++;
+        this.x -= 3;
       },
 
       damage: function(power) {
@@ -299,6 +342,12 @@ window.onload = function() {
         }
         for (i = 0; i < bosses.length; i++) {
           if (this.presence == true && bosses[i].presence == true && this.intersect(bosses[i])) {
+            this.explode();
+            bosses[i].damage(1);
+          }
+        }
+        for (i = 0; i < bosses2.length; i++) {
+          if (this.presence == true && bosses2[i].presence == true && this.intersect(bosses2[i])) {
             this.explode();
             bosses[i].damage(1);
           }
@@ -352,6 +401,16 @@ window.onload = function() {
                   player.die();
                 }
               }
+              for (k = 0; k < bosses.length; k++) {
+                if (this.presence == true && bosses[k].presence == true && this.within(bosses[k], 90)) {
+                  bosses[k].damage(2);
+                }
+              }
+              for (j = 0; j < bosses2.length; j++) {
+                if (this.presence == true && bosses2[j].presence == true && this.within(bosses2[j], 90)) {
+                  bosses2[j].damage(30);
+                }
+              }
             }
           },
           3: function() { core.rootScene.removeChild(this); this.presence = false; this.image = core.assets['icon0.png'];}
@@ -398,15 +457,18 @@ window.onload = function() {
     }
     // enemies.push(new Boss(400, 150));
     var bosses = new Array();
+    var bosses2 = new Array();
     bosses.push(new Boss(400, 150));
+    bosses2.push(new Boss2(500, 150));
     setInterval(function(){
     for (i = 0; i < 50; i++) {
       enemies.push(new Enemy(400+(30*i), 224));
     }
     // enemies.push(new Boss(400, 150));
     bosses.push(new Boss(400, 150));
+    bosses2.push(new Boss2(400, 150));
     // enemies.push(new Boss(400, 150));
-    }, 10000);
+    }, 11000);
   }
   core.start();
 };
